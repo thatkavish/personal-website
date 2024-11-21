@@ -4,9 +4,12 @@ services:
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: |
-      python init_db.py
-      python add_sample_data.py
-      gunicorn app:app
+      echo "Initializing database..."
+      python init_db.py || exit 1
+      echo "Adding sample data..."
+      python add_sample_data.py || exit 1
+      echo "Starting web server..."
+      gunicorn app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
@@ -14,3 +17,5 @@ services:
         value: production
       - key: SECRET_KEY
         generateValue: true
+      - key: PORT
+        value: 10000

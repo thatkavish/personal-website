@@ -4,18 +4,31 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import logging
 
 # Get the directory where app.py is located
 basedir = os.path.abspath(os.path.dirname(__file__))
 # Create data directory in the same folder as app.py
 data_dir = os.path.join(basedir, 'data')
-os.makedirs(data_dir, exist_ok=True)
+try:
+    os.makedirs(data_dir, exist_ok=True)
+    print(f"Data directory created at: {data_dir}")
+except Exception as e:
+    print(f"Error creating data directory: {str(e)}")
+    raise
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 # Use relative path for SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{os.path.join(data_dir, "site.db")}')
+db_path = os.path.join(data_dir, "site.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+print(f"Using database at: {db_path}")
+
+# Set up logging
+logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
