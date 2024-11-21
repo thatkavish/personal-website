@@ -232,17 +232,21 @@ def admin():
 def new_blog():
     try:
         if request.method == 'POST':
+            date_posted = datetime.strptime(request.form['date_posted'], '%Y-%m-%dT%H:%M') if request.form['date_posted'] else datetime.utcnow()
             post = BlogPost(
                 title=request.form['title'],
                 content=request.form['content'],
-                description=request.form['description']
+                description=request.form['description'],
+                date_posted=date_posted
             )
             db.session.add(post)
             db.session.commit()
+            logger.info(f"Created new blog post: {post.title} with date {date_posted}")
             return redirect(url_for('admin'))
         return render_template('blog_form.html')
     except Exception as e:
         logger.error(f'Error creating new blog post: {e}')
+        logger.error(traceback.format_exc())
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/edit/<int:id>', methods=['GET', 'POST'])
@@ -254,11 +258,15 @@ def edit_blog(id):
             post.title = request.form['title']
             post.content = request.form['content']
             post.description = request.form['description']
+            if request.form['date_posted']:
+                post.date_posted = datetime.strptime(request.form['date_posted'], '%Y-%m-%dT%H:%M')
             db.session.commit()
+            logger.info(f"Updated blog post: {post.title} with date {post.date_posted}")
             return redirect(url_for('admin'))
         return render_template('blog_form.html', post=post)
     except Exception as e:
         logger.error(f'Error editing blog post: {e}')
+        logger.error(traceback.format_exc())
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/delete/<int:id>')
