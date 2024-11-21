@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} - Kavish Garg</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='blog.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">KG</div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}#home">Home</a></li>
+                <li><a href="{{ url_for('index') }}#about">About</a></li>
+                <li><a href="{{ url_for('index') }}#blog">Blog</a></li>
+                <li><a href="{{ url_for('index') }}#bookshelf">Bookshelf</a></li>
+                <li><a href="{{ url_for('index') }}#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <article class="blog-post">
+        <div class="container">
+            <header class="post-header">
+                <p class="post-date">{{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                <h1>{{ post.title }}</h1>
+            </header>
+
+            <div class="post-content">
+                {{ post.content | safe }}
+            </div>
+
+            <footer class="post-footer">
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?text={{ post.title | urlencode }}&url={{ request.url | urlencode }}" 
+                       target="_blank" class="share-button twitter">
+                        <i class="fab fa-twitter"></i> Share on Twitter
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url | urlencode }}" 
+                       target="_blank" class="share-button linkedin">
+                        <i class="fab fa-linkedin"></i> Share on LinkedIn
+                    </a>
+                </div>
+            </footer>
+        </div>
+    </article>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

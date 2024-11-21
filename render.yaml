@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: personal-website
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+    disk:
+      name: sqlite
+      mountPath: /data
+      sizeGB: 1

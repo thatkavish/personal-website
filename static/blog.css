@@ -1,0 +1,127 @@
+.blog-post {
+    padding: 4rem 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.post-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.post-date {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.post-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.post-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.post-content p {
+    margin-bottom: 1.5rem;
+}
+
+.post-content h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--accent-color);
+    margin: 2rem 0 1rem;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 2rem 0;
+    border-radius: 8px;
+}
+
+.post-content code {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+}
+
+.post-content pre {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.post-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.post-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    transition: background-color 0.3s;
+}
+
+.share-button i {
+    margin-right: 0.5rem;
+}
+
+.share-button.twitter {
+    background-color: #1da1f2;
+    color: white;
+}
+
+.share-button.linkedin {
+    background-color: #0077b5;
+    color: white;
+}
+
+.share-button:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .post-header h1 {
+        font-size: 2rem;
+    }
+
+    .post-content {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+
+    .share-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .share-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

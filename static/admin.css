@@ -1,0 +1,237 @@
+/* Admin Styles */
+:root {
+    --primary-color: #d4af37;
+    --danger-color: #dc3545;
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --section-bg: #1e1e1e;
+    --border-color: rgba(212, 175, 55, 0.1);
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-header h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    margin-left: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.admin-section {
+    background: var(--section-bg);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.items-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.item-content h3 {
+    color: var(--text-color);
+    margin: 0 0 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.meta {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.item-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Forms */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--section-bg);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: var(--bg-color);
+}
+
+.btn-primary:hover {
+    background: #b69121;
+}
+
+.btn-secondary {
+    background: var(--section-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: var(--text-color);
+}
+
+.btn-danger:hover {
+    background: #bb2d3b;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    background: var(--danger-color);
+    color: var(--text-color);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Login Form */
+.login-form {
+    max-width: 400px;
+    margin: 4rem auto;
+    background: var(--section-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.login-form h1 {
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    font-family: 'Playfair Display', serif;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1rem;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .item-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger {
+        width: 100%;
+        text-align: center;
+    }
+}
