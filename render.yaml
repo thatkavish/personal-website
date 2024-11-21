@@ -11,8 +11,6 @@ services:
       mkdir -p $PWD/data
       echo "Setting permissions..."
       chmod -R 777 $PWD/data
-      echo "Initializing application..."
-      PYTHONUNBUFFERED=1 python init_app.py || { echo "Application initialization failed"; exit 1; }
       echo "Starting web server..."
       PYTHONUNBUFFERED=1 gunicorn --workers=4 --threads=4 --timeout=120 --log-level=debug app:app --bind 0.0.0.0:$PORT
     envVars:
