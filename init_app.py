@@ -2,6 +2,7 @@ from app import app, db, User, BlogPost, Book
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 import logging
+import os
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -9,9 +10,18 @@ logger = logging.getLogger(__name__)
 def init_app():
     with app.app_context():
         try:
+            # Drop all tables first
+            logger.info("Dropping all existing tables...")
+            db.drop_all()
+            
             # Create all tables
             logger.info("Creating database tables...")
             db.create_all()
+
+            # Verify tables were created
+            inspector = db.inspect(db.engine)
+            tables = inspector.get_table_names()
+            logger.info(f"Created tables: {tables}")
 
             # Check if admin user exists
             if not User.query.filter_by(username='admin').first():
@@ -72,6 +82,12 @@ def init_app():
 
             db.session.commit()
             logger.info("Database initialization completed successfully!")
+            
+            # Verify data was added
+            blog_count = BlogPost.query.count()
+            book_count = Book.query.count()
+            user_count = User.query.count()
+            logger.info(f"Database contains: {blog_count} blog posts, {book_count} books, {user_count} users")
             
         except Exception as e:
             logger.error(f"Error during database initialization: {str(e)}")

@@ -67,16 +67,18 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 class BlogPost(db.Model):
+    __tablename__ = 'blog_posts'  # Explicitly set table name
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
+    description = db.Column(db.String(200))
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    description = db.Column(db.String(500))
 
 class Book(db.Model):
+    __tablename__ = 'books'  # Explicitly set table name
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    author = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
     notes = db.Column(db.Text)
     date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
@@ -91,11 +93,14 @@ def load_user(user_id):
 @app.route('/')
 def index():
     try:
+        logger.info("Fetching blog posts and books for index page...")
         blog_posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
         books = Book.query.order_by(Book.date_added.desc()).all()
+        logger.info(f"Found {len(blog_posts)} blog posts and {len(books)} books")
         return render_template('index.html', blog_posts=blog_posts, books=books)
     except Exception as e:
-        logger.error(f'Error rendering index page: {e}')
+        logger.error(f'Error rendering index page: {str(e)}')
+        logger.error(traceback.format_exc())
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/<int:id>')
