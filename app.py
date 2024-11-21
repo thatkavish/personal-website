@@ -13,6 +13,12 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
 )
+logger = logging.getLogger(__name__)
+
+# Create Flask app first
+app = Flask(__name__)
+app.config['DEBUG'] = True
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
 # Get the directory where app.py is located
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -20,17 +26,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 data_dir = os.path.join(basedir, 'data')
 try:
     os.makedirs(data_dir, exist_ok=True)
-    app.logger.info(f"Data directory created at: {data_dir}")
+    logger.info(f"Data directory created at: {data_dir}")
 except Exception as e:
-    app.logger.error(f"Error creating data directory: {str(e)}")
+    logger.error(f"Error creating data directory: {str(e)}")
     raise
-
-app = Flask(__name__)
-app.logger.info("Flask app created")
-
-# Enable debug mode
-app.config['DEBUG'] = True
-app.config['PROPAGATE_EXCEPTIONS'] = True
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
 # Use relative path for SQLite database
@@ -38,7 +37,7 @@ db_path = os.path.join(data_dir, "site.db")
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.logger.info(f"Using database at: {db_path}")
+logger.info(f"Using database at: {db_path}")
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -46,14 +45,14 @@ login_manager.login_view = 'login'
 
 @app.errorhandler(500)
 def internal_error(error):
-    app.logger.error(f'Server Error: {error}')
-    app.logger.error(traceback.format_exc())
+    logger.error(f'Server Error: {error}')
+    logger.error(traceback.format_exc())
     return render_template('error.html', error=error), 500
 
 @app.errorhandler(Exception)
 def handle_exception(e):
-    app.logger.error(f'Unhandled Exception: {e}')
-    app.logger.error(traceback.format_exc())
+    logger.error(f'Unhandled Exception: {e}')
+    logger.error(traceback.format_exc())
     return render_template('error.html', error=str(e)), 500
 
 class User(UserMixin, db.Model):
@@ -86,7 +85,7 @@ def load_user(user_id):
     try:
         return User.query.get(int(user_id))
     except Exception as e:
-        app.logger.error(f'Error loading user: {e}')
+        logger.error(f'Error loading user: {e}')
         return None
 
 @app.route('/')
@@ -96,7 +95,7 @@ def index():
         books = Book.query.order_by(Book.date_added.desc()).all()
         return render_template('index.html', blog_posts=blog_posts, books=books)
     except Exception as e:
-        app.logger.error(f'Error rendering index page: {e}')
+        logger.error(f'Error rendering index page: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/<int:id>')
@@ -105,7 +104,7 @@ def blog_post(id):
         post = BlogPost.query.get_or_404(id)
         return render_template('blog_post.html', post=post)
     except Exception as e:
-        app.logger.error(f'Error rendering blog post page: {e}')
+        logger.error(f'Error rendering blog post page: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -119,7 +118,7 @@ def login():
             flash('Invalid username or password')
         return render_template('login.html')
     except Exception as e:
-        app.logger.error(f'Error rendering login page: {e}')
+        logger.error(f'Error rendering login page: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/logout')
@@ -129,7 +128,7 @@ def logout():
         logout_user()
         return redirect(url_for('index'))
     except Exception as e:
-        app.logger.error(f'Error logging out: {e}')
+        logger.error(f'Error logging out: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/admin')
@@ -140,7 +139,7 @@ def admin():
         books = Book.query.order_by(Book.date_added.desc()).all()
         return render_template('admin.html', blog_posts=blog_posts, books=books)
     except Exception as e:
-        app.logger.error(f'Error rendering admin page: {e}')
+        logger.error(f'Error rendering admin page: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/new', methods=['GET', 'POST'])
@@ -158,7 +157,7 @@ def new_blog():
             return redirect(url_for('admin'))
         return render_template('blog_form.html')
     except Exception as e:
-        app.logger.error(f'Error creating new blog post: {e}')
+        logger.error(f'Error creating new blog post: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/edit/<int:id>', methods=['GET', 'POST'])
@@ -174,7 +173,7 @@ def edit_blog(id):
             return redirect(url_for('admin'))
         return render_template('blog_form.html', post=post)
     except Exception as e:
-        app.logger.error(f'Error editing blog post: {e}')
+        logger.error(f'Error editing blog post: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/blog/delete/<int:id>')
@@ -186,7 +185,7 @@ def delete_blog(id):
         db.session.commit()
         return redirect(url_for('admin'))
     except Exception as e:
-        app.logger.error(f'Error deleting blog post: {e}')
+        logger.error(f'Error deleting blog post: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/book/new', methods=['GET', 'POST'])
@@ -204,7 +203,7 @@ def new_book():
             return redirect(url_for('admin'))
         return render_template('book_form.html')
     except Exception as e:
-        app.logger.error(f'Error creating new book: {e}')
+        logger.error(f'Error creating new book: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/book/edit/<int:id>', methods=['GET', 'POST'])
@@ -220,7 +219,7 @@ def edit_book(id):
             return redirect(url_for('admin'))
         return render_template('book_form.html', book=book)
     except Exception as e:
-        app.logger.error(f'Error editing book: {e}')
+        logger.error(f'Error editing book: {e}')
         return render_template('error.html', error=str(e)), 500
 
 @app.route('/book/delete/<int:id>')
@@ -232,7 +231,7 @@ def delete_book(id):
         db.session.commit()
         return redirect(url_for('admin'))
     except Exception as e:
-        app.logger.error(f'Error deleting book: {e}')
+        logger.error(f'Error deleting book: {e}')
         return render_template('error.html', error=str(e)), 500
 
 if __name__ == '__main__':

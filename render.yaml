@@ -7,6 +7,10 @@ services:
       echo "Starting application setup..."
       echo "Current directory: $PWD"
       echo "Python version: $(python --version)"
+      echo "Creating data directory..."
+      mkdir -p $PWD/data
+      echo "Setting permissions..."
+      chmod -R 777 $PWD/data
       echo "Initializing database..."
       PYTHONUNBUFFERED=1 python init_db.py || { echo "Database initialization failed"; exit 1; }
       echo "Adding sample data..."
