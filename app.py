@@ -43,6 +43,44 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# Define models first
+class User(UserMixin, db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+class BlogPost(db.Model):
+    __tablename__ = 'blog_posts'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    description = db.Column(db.String(200))
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+class Book(db.Model):
+    __tablename__ = 'books'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
+    notes = db.Column(db.Text)
+    date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+@login_manager.user_loader
+def load_user(user_id):
+    try:
+        return User.query.get(int(user_id))
+    except Exception as e:
+        logger.error(f'Error loading user: {e}')
+        return None
+
+# Then define initialization function
 def init_db():
     """Initialize the database and add sample data."""
     with app.app_context():
@@ -131,53 +169,7 @@ def init_db():
 # Initialize database when the application starts
 init_db()
 
-@app.errorhandler(500)
-def internal_error(error):
-    logger.error(f'Server Error: {error}')
-    logger.error(traceback.format_exc())
-    return render_template('error.html', error=error), 500
-
-@app.errorhandler(Exception)
-def handle_exception(e):
-    logger.error(f'Unhandled Exception: {e}')
-    logger.error(traceback.format_exc())
-    return render_template('error.html', error=str(e)), 500
-
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column(db.String(120), nullable=False)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-class BlogPost(db.Model):
-    __tablename__ = 'blog_posts'  # Explicitly set table name
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    description = db.Column(db.String(200))
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-class Book(db.Model):
-    __tablename__ = 'books'  # Explicitly set table name
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    notes = db.Column(db.Text)
-    date_added = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-@login_manager.user_loader
-def load_user(user_id):
-    try:
-        return User.query.get(int(user_id))
-    except Exception as e:
-        logger.error(f'Error loading user: {e}')
-        return None
-
+# Then define routes
 @app.route('/')
 def index():
     try:
@@ -326,6 +318,18 @@ def delete_book(id):
     except Exception as e:
         logger.error(f'Error deleting book: {e}')
         return render_template('error.html', error=str(e)), 500
+
+@app.errorhandler(500)
+def internal_error(error):
+    logger.error(f'Server Error: {error}')
+    logger.error(traceback.format_exc())
+    return render_template('error.html', error=error), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    logger.error(f'Unhandled Exception: {e}')
+    logger.error(traceback.format_exc())
+    return render_template('error.html', error=str(e)), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
