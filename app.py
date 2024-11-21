@@ -236,11 +236,11 @@ def delete_book(id):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
-        # Create admin user if it doesn't exist
-        if not User.query.filter_by(username='admin').first():
-            admin = User(username='admin')
-            admin.set_password('admin123')
-            db.session.add(admin)
-            db.session.commit()
-    app.run(host='0.0.0.0', port=8000, debug=True)
+        try:
+            logger.info("Creating database tables...")
+            db.create_all()
+            logger.info("Database tables created successfully!")
+        except Exception as e:
+            logger.error(f"Error creating database tables: {str(e)}")
+            raise
+    app.run(debug=True)

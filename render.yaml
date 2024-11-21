@@ -11,12 +11,10 @@ services:
       mkdir -p $PWD/data
       echo "Setting permissions..."
       chmod -R 777 $PWD/data
-      echo "Initializing database..."
-      PYTHONUNBUFFERED=1 python init_db.py || { echo "Database initialization failed"; exit 1; }
-      echo "Adding sample data..."
-      PYTHONUNBUFFERED=1 python add_sample_data.py || { echo "Sample data addition failed"; exit 1; }
+      echo "Initializing application..."
+      PYTHONUNBUFFERED=1 python init_app.py || { echo "Application initialization failed"; exit 1; }
       echo "Starting web server..."
-      PYTHONUNBUFFERED=1 gunicorn app:app --log-level debug --bind 0.0.0.0:$PORT
+      PYTHONUNBUFFERED=1 gunicorn --workers=4 --threads=4 --timeout=120 --log-level=debug app:app --bind 0.0.0.0:$PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
