@@ -5,12 +5,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 
-# Create data directory if it doesn't exist
-os.makedirs('/data', exist_ok=True)
+# Get the directory where app.py is located
+basedir = os.path.abspath(os.path.dirname(__file__))
+# Create data directory in the same folder as app.py
+data_dir = os.path.join(basedir, 'data')
+os.makedirs(data_dir, exist_ok=True)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////data/site.db')
+# Use relative path for SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{os.path.join(data_dir, "site.db")}')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
