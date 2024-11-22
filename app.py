@@ -83,88 +83,59 @@ def load_user(user_id):
 # Then define initialization function
 def init_db():
     """Initialize the database and add sample data."""
-    with app.app_context():
-        try:
-            # Create all tables
-            logger.info("Creating database tables...")
-            db.create_all()
+    try:
+        logger.info("Creating database tables...")
+        db.create_all()
+        logger.info("Database tables created successfully")
 
-            # Verify tables were created
-            inspector = db.inspect(db.engine)
-            tables = inspector.get_table_names()
-            logger.info(f"Created tables: {tables}")
+        # Check if tables exist and log their names
+        inspector = db.inspect(db.engine)
+        table_names = inspector.get_table_names()
+        logger.info(f"Existing tables in database: {table_names}")
 
-            # Check if admin user exists
-            if not User.query.filter_by(username='admin').first():
-                logger.info("Creating admin user...")
-                admin = User(
-                    username='admin',
-                    password_hash=generate_password_hash('admin', method='pbkdf2:sha256')
-                )
-                db.session.add(admin)
-                db.session.commit()
-                logger.info("Admin user created successfully!")
-
-            # Add sample blog posts if they don't exist
-            if not BlogPost.query.first():
-                logger.info("Adding sample blog posts...")
-                posts = [
-                    {
-                        'title': 'AI in Economic Policy',
-                        'content': 'Exploring how artificial intelligence is reshaping economic policy-making...',
-                        'description': 'An analysis of AI\'s impact on economic policy decisions',
-                        'date_posted': datetime.utcnow()
-                    },
-                    {
-                        'title': 'Machine Learning in Economics',
-                        'content': 'How machine learning algorithms are transforming economic analysis...',
-                        'description': 'Overview of ML applications in economic research',
-                        'date_posted': datetime.utcnow()
-                    }
-                ]
-                
-                for post in posts:
-                    blog_post = BlogPost(**post)
-                    db.session.add(blog_post)
-                logger.info("Sample blog posts added!")
-
-            # Add sample books if they don't exist
-            if not Book.query.first():
-                logger.info("Adding sample books...")
-                books = [
-                    {
-                        'title': 'Deep Learning',
-                        'author': 'Ian Goodfellow, Yoshua Bengio, Aaron Courville',
-                        'notes': 'Comprehensive overview of deep learning principles',
-                        'date_added': datetime.utcnow()
-                    },
-                    {
-                        'title': 'Economics of AI',
-                        'author': 'Various Authors',
-                        'notes': 'Collection of papers on AI\'s economic implications',
-                        'date_added': datetime.utcnow()
-                    }
-                ]
-                
-                for book in books:
-                    book_entry = Book(**book)
-                    db.session.add(book_entry)
-                logger.info("Sample books added!")
-
+        # Check if admin user exists
+        if not User.query.filter_by(username='admin').first():
+            logger.info("Creating admin user...")
+            admin_user = User(
+                username='admin',
+                password_hash=generate_password_hash('admin', method='pbkdf2:sha256')
+            )
+            db.session.add(admin_user)
             db.session.commit()
-            logger.info("Database initialization completed successfully!")
-            
-            # Verify data was added
-            blog_count = BlogPost.query.count()
-            book_count = Book.query.count()
-            user_count = User.query.count()
-            logger.info(f"Database contains: {blog_count} blog posts, {book_count} books, {user_count} users")
-            
-        except Exception as e:
-            logger.error(f"Error during database initialization: {str(e)}")
-            logger.error(traceback.format_exc())
-            db.session.rollback()
-            raise
+            logger.info("Admin user created successfully")
+
+        # Add sample blog posts if none exist
+        if not BlogPost.query.first():
+            logger.info("Adding sample blog posts...")
+            sample_posts = [
+                BlogPost(
+                    title='Welcome to My Blog',
+                    content='This is my first blog post...',
+                    description='An introduction to my blog'
+                )
+            ]
+            db.session.add_all(sample_posts)
+            db.session.commit()
+            logger.info("Sample blog posts added successfully")
+
+        # Add sample books if none exist
+        if not Book.query.first():
+            logger.info("Adding sample books...")
+            sample_books = [
+                Book(
+                    title='The Economics of AI',
+                    author='Sample Author',
+                    notes='A fascinating exploration of AI economics'
+                )
+            ]
+            db.session.add_all(sample_books)
+            db.session.commit()
+            logger.info("Sample books added successfully")
+
+    except Exception as e:
+        logger.error(f"Error initializing database: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise
 
 # Initialize database when the application starts
 init_db()
@@ -331,10 +302,13 @@ def delete_book(id):
 def books():
     """Route for the full bookshelf page."""
     try:
+        logger.info("Fetching all books from database...")
         books = Book.query.order_by(Book.date_added.desc()).all()
+        logger.info(f"Successfully fetched {len(books)} books")
         return render_template('books.html', books=books)
     except Exception as e:
-        app.logger.error(f"Error in books route: {str(e)}")
+        logger.error(f"Error in books route: {str(e)}")
+        logger.error(traceback.format_exc())  # Add full traceback
         return render_template('error.html', error="Could not load books at this time.")
 
 @app.errorhandler(500)
