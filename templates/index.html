@@ -76,18 +76,23 @@
 
     <section id="bookshelf" class="bookshelf">
         <div class="container">
-            <h2>Bookshelf</h2>
-            <div class="book-grid">
-                {% for book in books %}
+            <h2>Recent Reads</h2>
+            <p class="section-description">A glimpse into my current reading list.</p>
+            
+            <div class="books-preview">
+                {% for book in books[:3] %}
                 <div class="book-card">
-                    <div class="book-cover">
-                        <i class="fas fa-book"></i>
+                    <div class="book-content">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-author">by {{ book.author }}</p>
+                        <p class="book-notes">{{ book.notes }}</p>
                     </div>
-                    <h3>{{ book.title }}</h3>
-                    <p class="author">{{ book.author }}</p>
-                    <p class="book-notes">{{ book.notes }}</p>
                 </div>
                 {% endfor %}
+            </div>
+            
+            <div class="view-all-container">
+                <a href="{{ url_for('books') }}" class="btn-primary">View Full Bookshelf</a>
             </div>
         </div>
     </section>
@@ -115,6 +120,81 @@
             <p>&copy; 2024 Kavish Garg. All rights reserved.</p>
         </div>
     </footer>
+
+    <style>
+    .bookshelf {
+        padding: 4rem 0;
+        background-color: var(--bg-color);
+    }
+
+    .section-description {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+    }
+
+    .books-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .book-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .book-author {
+        font-style: italic;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .book-notes {
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    .view-all-container {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-color);
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-color-dark);
+    }
+
+    @media (max-width: 768px) {
+        .books-preview {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

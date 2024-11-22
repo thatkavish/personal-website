@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="books-page">
+    <div class="container">
+        <h1>My Bookshelf</h1>
+        <p class="section-description">A curated collection of books that have shaped my understanding of Economics and AI.</p>
+        
+        <div class="books-grid">
+            {% for book in books %}
+            <div class="book-card">
+                <div class="book-content">
+                    <h3 class="book-title">{{ book.title }}</h3>
+                    <p class="book-author">by {{ book.author }}</p>
+                    <p class="book-notes">{{ book.notes }}</p>
+                    <p class="book-date">Added on {{ book.date_added.strftime('%B %d, %Y') }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .books-page {
+        padding: 4rem 0;
+        background-color: var(--bg-color);
+    }
+
+    .books-page h1 {
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .section-description {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .book-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .book-author {
+        font-style: italic;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .book-notes {
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .book-date {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+        .books-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

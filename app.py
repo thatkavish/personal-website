@@ -327,6 +327,16 @@ def delete_book(id):
         logger.error(f'Error deleting book: {e}')
         return render_template('error.html', error=str(e)), 500
 
+@app.route('/books')
+def books():
+    """Route for the full bookshelf page."""
+    try:
+        books = Book.query.order_by(Book.date_added.desc()).all()
+        return render_template('books.html', books=books)
+    except Exception as e:
+        app.logger.error(f"Error in books route: {str(e)}")
+        return render_template('error.html', error="Could not load books at this time.")
+
 @app.errorhandler(500)
 def internal_error(error):
     logger.error(f'Server Error: {error}')
