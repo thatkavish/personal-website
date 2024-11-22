@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kavish Garg - Economics & AI</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     <nav class="navbar">
         <div class="nav-content">
             <div class="logo">KG</div>
@@ -26,7 +18,7 @@
         <div class="hero-content">
             <div class="typewriter">
                 <h1>Kavish Garg</h1>
-                <p class="tagline">Stanford Student | Economics & AI Enthusiast</p>
+                <p class="tagline">Building for a post-AGI World</p>
             </div>
             <div class="social-links">
                 <a href="mailto:kavishg@stanford.edu" class="social-link">
@@ -47,7 +39,7 @@
             <h2>About Me</h2>
             <div class="about-content">
                 <p>
-                    I'm a student at Stanford University, passionate about the intersection of Economics and Artificial Intelligence. 
+                    Hi! I'm Kavish Garg, a student at Stanford studying Economics and Mathematics. I'm passionate about the intersection of Economics and Artificial Intelligence. 
                     My research interests focus on how AI can enhance economic decision-making and policy formation.
                 </p>
                 <p>
@@ -62,13 +54,13 @@
         <div class="container">
             <h2>Blog</h2>
             <div class="blog-grid">
-                {% for post in blog_posts %}
-                <article class="blog-card">
-                    <div class="blog-date">{{ post.date_posted.strftime('%B %d, %Y') }}</div>
+                {% for post in posts %}
+                <div class="blog-card">
                     <h3>{{ post.title }}</h3>
-                    <p>{{ post.description }}</p>
-                    <a href="{{ url_for('blog_post', id=post.id) }}" class="read-more">Read More →</a>
-                </article>
+                    <p class="blog-description">{{ post.description }}</p>
+                    <p class="blog-date">{{ post.date_posted.strftime('%B %d, %Y') }}</p>
+                    <a href="{{ url_for('blog_post', id=post.id) }}" class="read-more">Read More</a>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -121,7 +113,117 @@
         </div>
     </footer>
 
-    <style>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background-color: var(--bg-color);
+        padding: 2rem;
+    }
+
+    .typewriter h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .tagline {
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+    }
+
+    .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .social-link {
+        color: var(--text-color);
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .social-link:hover {
+        color: var(--primary-color);
+    }
+
+    .about, .blog, .bookshelf, .contact {
+        padding: 4rem 0;
+    }
+
+    .about h2, .blog h2, .bookshelf h2, .contact h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .about-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .blog-card {
+        background: var(--card-bg);
+        padding: 1.5rem;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .blog-description {
+        color: var(--text-secondary);
+        margin: 1rem 0;
+    }
+
+    .blog-date {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .read-more {
+        display: inline-block;
+        color: var(--primary-color);
+        text-decoration: none;
+        margin-top: 1rem;
+    }
+
+    .read-more:hover {
+        text-decoration: underline;
+    }
+
+    .contact p {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+        .typewriter h1 {
+            font-size: 2rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+        }
+    }
+
     .bookshelf {
         padding: 4rem 0;
         background-color: var(--bg-color);
@@ -194,8 +296,5 @@
             grid-template-columns: 1fr;
         }
     }
-    </style>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
+</style>
+{% endblock %}
