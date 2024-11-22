@@ -83,62 +83,64 @@ def load_user(user_id):
 # Then define initialization function
 def init_db():
     """Initialize the database and add sample data."""
-    try:
-        logger.info("Creating database tables...")
-        db.create_all()
-        logger.info("Database tables created successfully")
+    with app.app_context():
+        try:
+            logger.info("Creating database tables...")
+            db.create_all()
+            logger.info("Database tables created successfully")
 
-        # Check if tables exist and log their names
-        inspector = db.inspect(db.engine)
-        table_names = inspector.get_table_names()
-        logger.info(f"Existing tables in database: {table_names}")
+            # Check if tables exist and log their names
+            inspector = db.inspect(db.engine)
+            table_names = inspector.get_table_names()
+            logger.info(f"Existing tables in database: {table_names}")
 
-        # Check if admin user exists
-        if not User.query.filter_by(username='admin').first():
-            logger.info("Creating admin user...")
-            admin_user = User(
-                username='admin',
-                password_hash=generate_password_hash('admin', method='pbkdf2:sha256')
-            )
-            db.session.add(admin_user)
-            db.session.commit()
-            logger.info("Admin user created successfully")
-
-        # Add sample blog posts if none exist
-        if not BlogPost.query.first():
-            logger.info("Adding sample blog posts...")
-            sample_posts = [
-                BlogPost(
-                    title='Welcome to My Blog',
-                    content='This is my first blog post...',
-                    description='An introduction to my blog'
+            # Check if admin user exists
+            if not User.query.filter_by(username='admin').first():
+                logger.info("Creating admin user...")
+                admin_user = User(
+                    username='admin',
+                    password_hash=generate_password_hash('admin', method='pbkdf2:sha256')
                 )
-            ]
-            db.session.add_all(sample_posts)
-            db.session.commit()
-            logger.info("Sample blog posts added successfully")
+                db.session.add(admin_user)
+                db.session.commit()
+                logger.info("Admin user created successfully")
 
-        # Add sample books if none exist
-        if not Book.query.first():
-            logger.info("Adding sample books...")
-            sample_books = [
-                Book(
-                    title='The Economics of AI',
-                    author='Sample Author',
-                    notes='A fascinating exploration of AI economics'
-                )
-            ]
-            db.session.add_all(sample_books)
-            db.session.commit()
-            logger.info("Sample books added successfully")
+            # Add sample blog posts if none exist
+            if not BlogPost.query.first():
+                logger.info("Adding sample blog posts...")
+                sample_posts = [
+                    BlogPost(
+                        title='Welcome to My Blog',
+                        content='This is my first blog post...',
+                        description='An introduction to my blog'
+                    )
+                ]
+                db.session.add_all(sample_posts)
+                db.session.commit()
+                logger.info("Sample blog posts added successfully")
 
-    except Exception as e:
-        logger.error(f"Error initializing database: {str(e)}")
-        logger.error(traceback.format_exc())
-        raise
+            # Add sample books if none exist
+            if not Book.query.first():
+                logger.info("Adding sample books...")
+                sample_books = [
+                    Book(
+                        title='The Economics of AI',
+                        author='Sample Author',
+                        notes='A fascinating exploration of AI economics'
+                    )
+                ]
+                db.session.add_all(sample_books)
+                db.session.commit()
+                logger.info("Sample books added successfully")
+
+        except Exception as e:
+            logger.error(f"Error initializing database: {str(e)}")
+            logger.error(traceback.format_exc())
+            raise
 
 # Initialize database when the application starts
-init_db()
+with app.app_context():
+    init_db()
 
 # Then define routes
 @app.route('/')
