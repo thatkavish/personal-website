@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <section class="blog-section">
+        <h1 class="section-title">Blog</h1>
+        <div class="blog-grid">
+            {% for post in posts %}
+            <article class="blog-card">
+                <div class="blog-card-content">
+                    <h2 class="blog-title">{{ post.title }}</h2>
+                    <p class="blog-description">{{ post.description }}</p>
+                    <div class="blog-meta">
+                        <span class="blog-date">{{ post.date_posted.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    <a href="{{ url_for('blog_post', id=post.id) }}" class="read-more">Read More →</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<style>
+    .blog-section {
+        padding: 6rem 0;
+    }
+
+    .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        color: var(--text-color);
+    }
+
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 1rem 0;
+    }
+
+    .blog-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .blog-card-content {
+        padding: 1.5rem;
+    }
+
+    .blog-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.5rem;
+        margin: 0 0 1rem 0;
+        color: var(--text-color);
+    }
+
+    .blog-description {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .blog-meta {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+    }
+
+    .read-more {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+    .read-more:hover {
+        color: var(--primary-color-dark);
+    }
+
+    @media (max-width: 768px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}

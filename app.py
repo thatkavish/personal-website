@@ -156,6 +156,12 @@ def index():
         logger.error(traceback.format_exc())
         return render_template('error.html', error=str(e)), 500
 
+@app.route('/blog')
+def blog():
+    """Route for the full blog page."""
+    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
+    return render_template('blog.html', posts=posts)
+
 @app.route('/blog/<int:id>')
 def blog_post(id):
     try:
