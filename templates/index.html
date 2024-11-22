@@ -23,7 +23,7 @@
 
     <section id="about" class="about">
         <div class="container">
-            <h2 style="color: #3498db;">About Me</h2>
+            <h2>About Me</h2>
             <div class="about-content">
                 <p>
                     Hi! I'm Kavish Garg, a student at Stanford studying Economics and Mathematics. I'm passionate about the intersection of Economics and Artificial Intelligence. 
@@ -39,9 +39,9 @@
 
     <section id="blog" class="blog">
         <div class="container">
-            <h2 style="color: #e74c3c;">Blog</h2>
+            <h2>Blog</h2>
             <div class="blog-grid">
-                {% for post in recent_posts %}
+                {% for post in blog_posts[:3] %}
                 <article class="blog-preview">
                     <h3>{{ post.title }}</h3>
                     <p class="preview-description">{{ post.description }}</p>
@@ -60,7 +60,7 @@
 
     <section id="bookshelf" class="bookshelf">
         <div class="container">
-            <h2 style="color: #2ecc71;">Recent Reads</h2>
+            <h2>Recent Reads</h2>
             <p class="section-description">A glimpse into my current reading list.</p>
             
             <div class="books-preview">
@@ -83,7 +83,7 @@
 
     <section id="contact" class="contact">
         <div class="container">
-            <h2 style="color: #9b59b6;">Get in Touch</h2>
+            <h2>Get in Touch</h2>
             <p>Feel free to reach out for collaborations or discussions about Economics and AI.</p>
             <div class="social-links">
                 <a href="mailto:kavishg@stanford.edu" class="social-link">
@@ -156,6 +156,7 @@
         text-align: center;
         margin-bottom: 3rem;
         font-size: 2.5rem;
+        color: #2c3e50;
     }
 
     .about-content {

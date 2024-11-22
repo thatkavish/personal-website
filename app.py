@@ -209,7 +209,6 @@ def index():
         logger.info("Fetching blog posts and books for index page...")
         blog_posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
         books = Book.query.order_by(Book.date_added.desc()).all()
-        logger.info(f"Found {len(blog_posts)} blog posts and {len(books)} books")
         return render_template('index.html', blog_posts=blog_posts, books=books)
     except Exception as e:
         logger.error(f'Error rendering index page: {str(e)}')
