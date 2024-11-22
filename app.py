@@ -113,6 +113,36 @@ def init_db():
                         title='Welcome to My Blog',
                         content='This is my first blog post...',
                         description='An introduction to my blog'
+                    ),
+                    BlogPost(
+                        title='The Future of Economic Policy in an AI-Driven World',
+                        content='As artificial intelligence continues to reshape our economy...',
+                        description='Exploring how AI will influence economic policy making'
+                    ),
+                    BlogPost(
+                        title='Game Theory and Machine Learning',
+                        content='The intersection of game theory and machine learning...',
+                        description='Understanding strategic decision making in AI systems'
+                    ),
+                    BlogPost(
+                        title='Behavioral Economics in the Age of AI',
+                        content='How do cognitive biases affect our interactions with AI...',
+                        description='Examining human behavior in AI-integrated markets'
+                    ),
+                    BlogPost(
+                        title='The Economics of Large Language Models',
+                        content='Analyzing the economic implications of LLMs...',
+                        description='Cost-benefit analysis of developing and deploying LLMs'
+                    ),
+                    BlogPost(
+                        title='Market Design for AI Systems',
+                        content='Principles for designing efficient AI marketplaces...',
+                        description='Creating sustainable markets for AI resources'
+                    ),
+                    BlogPost(
+                        title='AI and Labor Market Transformation',
+                        content='Understanding how AI is reshaping employment...',
+                        description='Analysis of AI\'s impact on workforce dynamics'
                     )
                 ]
                 db.session.add_all(sample_posts)
@@ -127,6 +157,36 @@ def init_db():
                         title='The Economics of AI',
                         author='Sample Author',
                         notes='A fascinating exploration of AI economics'
+                    ),
+                    Book(
+                        title='Superintelligence: Paths, Dangers, Strategies',
+                        author='Nick Bostrom',
+                        notes='A comprehensive analysis of potential AI development trajectories and their implications'
+                    ),
+                    Book(
+                        title='The Economics of Artificial Intelligence',
+                        author='Ajay Agrawal, Joshua Gans, Avi Goldfarb',
+                        notes='Exploring the economic principles governing AI adoption and impact'
+                    ),
+                    Book(
+                        title='Human Compatible: AI and the Problem of Control',
+                        author='Stuart Russell',
+                        notes='Insights into designing AI systems that are aligned with human values'
+                    ),
+                    Book(
+                        title='Prediction Machines: The Simple Economics of Artificial Intelligence',
+                        author='Ajay Agrawal, Joshua Gans, Avi Goldfarb',
+                        notes='Understanding AI through the lens of economic decision-making'
+                    ),
+                    Book(
+                        title='The Alignment Problem',
+                        author='Brian Christian',
+                        notes='Examining the challenges of aligning AI systems with human values and objectives'
+                    ),
+                    Book(
+                        title='Life 3.0: Being Human in the Age of Artificial Intelligence',
+                        author='Max Tegmark',
+                        notes='Exploring the future of life in a world transformed by AI'
                     )
                 ]
                 db.session.add_all(sample_books)
