@@ -75,9 +75,7 @@
                 {% endfor %}
             </div>
             
-            <div class="view-all-container">
-                <a href="{{ url_for('books') }}" class="btn-primary">View Full Bookshelf</a>
-            </div>
+            <a href="{{ url_for('books') }}" class="view-bookshelf">View Full Bookshelf →</a>
         </div>
     </section>
 
@@ -217,26 +215,32 @@
 
     .view-all {
         text-align: center;
-        margin-top: 3rem;
+        margin-top: 2rem;
+        width: 100%;
     }
 
-    .view-all-link {
-        color: var(--primary-color);
+    .view-all-link, .view-bookshelf {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background-color: var(--primary-color);
+        color: var(--bg-color);
         text-decoration: none;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
     }
 
-    .view-all-link:hover {
-        color: var(--primary-color-dark);
-        transform: translateX(5px);
+    .view-all-link:hover, .view-bookshelf:hover {
+        background-color: var(--primary-color-dark);
     }
 
     .books-preview {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .view-bookshelf {
+        margin: 2rem auto;
+        display: block;
+        max-width: 200px;
     }
 
     .book-card {
@@ -266,11 +270,6 @@
     .book-notes {
         color: var(--text-secondary);
         line-height: 1.6;
-    }
-
-    .view-all-container {
-        text-align: center;
-        margin-top: 3rem;
     }
 
     .section-description {
