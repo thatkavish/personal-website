@@ -23,7 +23,7 @@
 
     <section id="about" class="about">
         <div class="container">
-            <h2>About Me</h2>
+            <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <p>
                     Hi! I'm Kavish Garg, a student at Stanford studying Economics and Mathematics. I'm passionate about the intersection of Economics and Artificial Intelligence. 
@@ -39,7 +39,7 @@
 
     <section id="blog" class="blog">
         <div class="container">
-            <h2>Blog</h2>
+            <h2 class="section-title">Blog</h2>
             <div class="blog-grid">
                 {% for post in blog_posts[:3] %}
                 <article class="blog-preview">
@@ -60,7 +60,7 @@
 
     <section id="bookshelf" class="bookshelf">
         <div class="container">
-            <h2>Recent Reads</h2>
+            <h2 class="section-title">Recent Reads</h2>
             <p class="section-description">A glimpse into my current reading list.</p>
             
             <div class="books-preview">
@@ -81,7 +81,7 @@
 
     <section id="contact" class="contact">
         <div class="container">
-            <h2>Get in Touch</h2>
+            <h2 class="section-title">Get in Touch</h2>
             <p>Feel free to reach out for collaborations or discussions about Economics and AI.</p>
             <div class="social-links">
                 <a href="mailto:kavishg@stanford.edu" class="social-link">
@@ -150,11 +150,10 @@
         padding: 6rem 0;
     }
 
-    .about h2, .blog h2, .bookshelf h2, .contact h2 {
+    .section-title {
+        color: #ffffff;
         text-align: center;
-        margin-bottom: 3rem;
-        font-size: 2.5rem;
-        color: #2c3e50;
+        margin-bottom: 2rem;
     }
 
     .about-content {
@@ -168,6 +167,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 2rem;
+        margin-bottom: 2rem;
     }
 
     .blog-preview {
@@ -180,6 +180,11 @@
     .blog-preview:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .blog-preview h3 {
+        color: #ffffff;
+        margin-bottom: 1rem;
     }
 
     .preview-description {
@@ -215,11 +220,11 @@
 
     .view-all {
         text-align: center;
-        margin-top: 2rem;
+        margin: 2rem auto;
         width: 100%;
     }
 
-    .view-all-link, .view-bookshelf {
+    .view-all-link {
         display: inline-block;
         padding: 0.8rem 1.5rem;
         background-color: var(--primary-color);
@@ -229,7 +234,7 @@
         transition: background-color 0.3s ease;
     }
 
-    .view-all-link:hover, .view-bookshelf:hover {
+    .view-all-link:hover {
         background-color: var(--primary-color-dark);
     }
 
