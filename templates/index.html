@@ -51,9 +51,11 @@
                     </div>
                 </article>
                 {% endfor %}
-                <div class="view-all">
-                    <a href="{{ url_for('blog') }}" class="view-all-link">View All Posts →</a>
-                </div>
+            </div>
+        </div>
+        <div class="container view-all-container">
+            <div class="view-all">
+                <a href="{{ url_for('blog') }}" class="view-all-link">View All Posts →</a>
             </div>
         </div>
     </section>
@@ -218,9 +220,12 @@
         transform: translateX(5px);
     }
 
+    .view-all-container {
+        margin-top: 2rem;
+    }
+
     .view-all {
         text-align: center;
-        margin: 2rem auto;
         width: 100%;
     }
 
