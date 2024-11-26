@@ -64,7 +64,6 @@
         <div class="container">
             <h2 class="section-title">Recent Reads</h2>
             <p class="section-description">A glimpse into my current reading list.</p>
-            
             <div class="books-preview">
                 {% for book in books[:3] %}
                 <div class="book-card">
@@ -76,8 +75,11 @@
                 </div>
                 {% endfor %}
             </div>
-            
-            <a href="{{ url_for('books') }}" class="view-bookshelf">View Full Bookshelf →</a>
+        </div>
+        <div class="container view-bookshelf-container">
+            <div class="view-bookshelf-wrapper">
+                <a href="{{ url_for('books') }}" class="view-bookshelf">View Full Bookshelf →</a>
+            </div>
         </div>
     </section>
 
@@ -248,6 +250,15 @@
         margin-bottom: 2rem;
     }
 
+    .view-bookshelf-container {
+        margin-top: 2rem;
+    }
+
+    .view-bookshelf-wrapper {
+        text-align: center;
+        width: 100%;
+    }
+
     .view-bookshelf {
         display: inline-block;
         padding: 0.8rem 1.5rem;
@@ -256,9 +267,6 @@
         text-decoration: none;
         border-radius: 4px;
         transition: background-color 0.3s ease;
-        text-align: center;
-        margin: 2rem auto;
-        max-width: 200px;
     }
 
     .view-bookshelf:hover {
