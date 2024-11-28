@@ -329,7 +329,7 @@ def edit_book(id):
         logger.error(f'Error editing book: {e}')
         return render_template('error.html', error=str(e)), 500
 
-@app.route('/book/delete/<int:id>')
+@app.route('/book/delete/<int:id>', methods=['POST'])
 @login_required
 def delete_book(id):
     try:
