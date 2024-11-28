@@ -44,11 +44,11 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-Talisman(app, content_security_policy=None)
+Talisman(app, content_security_policy=None, force_https=False)
 
 @app.before_request
 def before_request():
-    if not request.is_secure and app.env != "development":
+    if not request.is_secure and not app.debug:
         url = request.url.replace("http://", "https://", 1)
         return redirect(url, code=301)
 
