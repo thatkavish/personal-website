@@ -100,69 +100,74 @@ def load_user(user_id):
 def init_db():
     """Initialize the database and add sample data."""
     try:
-        # Create all tables
+        # Create tables if they don't exist
         db.create_all()
         logger.info("Database tables created successfully")
 
-        # Check if we need to add sample data
+        # Only add admin user if no users exist
         if User.query.first() is None:
             logger.info("No users found, adding admin user...")
             admin = User(username='admin')
             admin.set_password('admin')  # Remember to change this password
             db.session.add(admin)
-            db.session.commit()
-            logger.info("Admin user added successfully")
+            try:
+                db.session.commit()
+                logger.info("Admin user added successfully")
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Failed to add admin user: {e}")
+                raise
 
-        if BlogPost.query.first() is None and Book.query.first() is None:
+        # Check if we have any content
+        has_content = BlogPost.query.first() is not None or Book.query.first() is not None
+        
+        if not has_content:
             logger.info("No content found, adding sample data...")
-            # Add sample blog posts
-            sample_posts = [
-                {
-                    'title': 'The Future of AI in Economic Policy',
-                    'content': 'Exploring how artificial intelligence is reshaping economic policy-making...',
-                    'description': 'An analysis of AI\'s impact on economic decision-making'
-                },
-                {
-                    'title': 'Game Theory and Market Dynamics',
-                    'content': 'Understanding market behavior through the lens of game theory...',
-                    'description': 'Examining market dynamics using game theory principles'
-                },
-                {
-                    'title': 'Machine Learning in Financial Markets',
-                    'content': 'How ML algorithms are transforming financial market analysis...',
-                    'description': 'Exploring the intersection of ML and finance'
-                }
-            ]
+            try:
+                # Add sample blog posts
+                sample_posts = [
+                    {
+                        'title': 'The Future of AI in Economic Policy',
+                        'content': 'Exploring how artificial intelligence is reshaping economic policy-making...',
+                        'description': 'An analysis of AI\'s impact on economic decision-making'
+                    },
+                    {
+                        'title': 'Game Theory and Market Dynamics',
+                        'content': 'Understanding market behavior through the lens of game theory...',
+                        'description': 'Examining market dynamics using game theory principles'
+                    }
+                ]
 
-            # Add sample books
-            sample_books = [
-                {
-                    'title': 'Thinking, Fast and Slow',
-                    'author': 'Daniel Kahneman',
-                    'notes': 'A fascinating exploration of the two systems that drive the way we think.'
-                },
-                {
-                    'title': 'The Age of AI',
-                    'author': 'Henry Kissinger, Eric Schmidt, and Daniel Huttenlocher',
-                    'notes': 'An insightful analysis of how AI will transform human society.'
-                },
-                {
-                    'title': 'Economics of Monetary Union',
-                    'author': 'Paul De Grauwe',
-                    'notes': 'A comprehensive examination of monetary unions and their economic implications.'
-                }
-            ]
+                # Add sample books
+                sample_books = [
+                    {
+                        'title': 'Thinking, Fast and Slow',
+                        'author': 'Daniel Kahneman',
+                        'notes': 'A fascinating exploration of the two systems that drive the way we think.'
+                    },
+                    {
+                        'title': 'The Age of AI',
+                        'author': 'Henry Kissinger, Eric Schmidt, and Daniel Huttenlocher',
+                        'notes': 'An insightful analysis of how AI will transform human society.'
+                    }
+                ]
 
-            for post_data in sample_posts:
-                post = BlogPost(**post_data)
-                db.session.add(post)
+                for post_data in sample_posts:
+                    post = BlogPost(**post_data)
+                    db.session.add(post)
 
-            for book_data in sample_books:
-                book = Book(**book_data)
-                db.session.add(book)
+                for book_data in sample_books:
+                    book = Book(**book_data)
+                    db.session.add(book)
 
-            db.session.commit()
-            logger.info("Sample data added successfully")
+                db.session.commit()
+                logger.info("Sample data added successfully")
+            except Exception as e:
+                db.session.rollback()
+                logger.error(f"Failed to add sample data: {e}")
+                raise
+        else:
+            logger.info("Existing content found, skipping sample data")
 
     except Exception as e:
         logger.error(f"Error initializing database: {str(e)}")

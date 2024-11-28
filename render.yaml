@@ -11,8 +11,14 @@ services:
       mkdir -p /data
       echo "Setting permissions..."
       chmod -R 777 /data
-      echo "Copying existing database if it exists..."
-      cp -n /opt/render/project/src/data/site.db /data/site.db 2>/dev/null || true
+      echo "Checking for existing database..."
+      if [ ! -f /data/site.db ]; then
+        echo "No existing database found, creating new one..."
+        touch /data/site.db
+        chmod 666 /data/site.db
+      else
+        echo "Using existing database at /data/site.db"
+      fi
       echo "Starting web server..."
       PYTHONUNBUFFERED=1 gunicorn --workers=4 --threads=4 --timeout=120 --log-level=debug app:app --bind 0.0.0.0:$PORT
     disk:
