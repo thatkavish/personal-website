@@ -7,6 +7,7 @@ import os
 import logging
 import sys
 import traceback
+from flask_talisman import Talisman
 
 # Set up logging
 logging.basicConfig(
@@ -42,6 +43,14 @@ logger.info(f"Using database at: {db_path}")
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+Talisman(app, content_security_policy=None)
+
+@app.before_request
+def before_request():
+    if not request.is_secure and app.env != "development":
+        url = request.url.replace("http://", "https://", 1)
+        return redirect(url, code=301)
 
 # Define models first
 class User(UserMixin, db.Model):
