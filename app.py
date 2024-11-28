@@ -99,124 +99,84 @@ def load_user(user_id):
 # Then define initialization function
 def init_db():
     """Initialize the database and add sample data."""
-    with app.app_context():
-        try:
-            logger.info("Creating database tables...")
-            db.create_all()
-            logger.info("Database tables created successfully")
+    try:
+        # Create all tables
+        db.create_all()
+        logger.info("Database tables created successfully")
 
-            # Check if tables exist and log their names
-            inspector = db.inspect(db.engine)
-            table_names = inspector.get_table_names()
-            logger.info(f"Existing tables in database: {table_names}")
+        # Check if we need to add sample data
+        if User.query.first() is None:
+            logger.info("No users found, adding admin user...")
+            admin = User(username='admin')
+            admin.set_password('admin')  # Remember to change this password
+            db.session.add(admin)
+            db.session.commit()
+            logger.info("Admin user added successfully")
 
-            # Check if admin user exists
-            if not User.query.filter_by(username='admin').first():
-                logger.info("Creating admin user...")
-                admin_user = User(
-                    username='admin',
-                    password_hash=generate_password_hash('admin', method='pbkdf2:sha256')
-                )
-                db.session.add(admin_user)
-                db.session.commit()
-                logger.info("Admin user created successfully")
+        if BlogPost.query.first() is None and Book.query.first() is None:
+            logger.info("No content found, adding sample data...")
+            # Add sample blog posts
+            sample_posts = [
+                {
+                    'title': 'The Future of AI in Economic Policy',
+                    'content': 'Exploring how artificial intelligence is reshaping economic policy-making...',
+                    'description': 'An analysis of AI\'s impact on economic decision-making'
+                },
+                {
+                    'title': 'Game Theory and Market Dynamics',
+                    'content': 'Understanding market behavior through the lens of game theory...',
+                    'description': 'Examining market dynamics using game theory principles'
+                },
+                {
+                    'title': 'Machine Learning in Financial Markets',
+                    'content': 'How ML algorithms are transforming financial market analysis...',
+                    'description': 'Exploring the intersection of ML and finance'
+                }
+            ]
 
-            # Add sample blog posts if none exist
-            if not BlogPost.query.first():
-                logger.info("Adding sample blog posts...")
-                sample_posts = [
-                    BlogPost(
-                        title='Welcome to My Blog',
-                        content='This is my first blog post...',
-                        description='An introduction to my blog'
-                    ),
-                    BlogPost(
-                        title='The Future of Economic Policy in an AI-Driven World',
-                        content='As artificial intelligence continues to reshape our economy...',
-                        description='Exploring how AI will influence economic policy making'
-                    ),
-                    BlogPost(
-                        title='Game Theory and Machine Learning',
-                        content='The intersection of game theory and machine learning...',
-                        description='Understanding strategic decision making in AI systems'
-                    ),
-                    BlogPost(
-                        title='Behavioral Economics in the Age of AI',
-                        content='How do cognitive biases affect our interactions with AI...',
-                        description='Examining human behavior in AI-integrated markets'
-                    ),
-                    BlogPost(
-                        title='The Economics of Large Language Models',
-                        content='Analyzing the economic implications of LLMs...',
-                        description='Cost-benefit analysis of developing and deploying LLMs'
-                    ),
-                    BlogPost(
-                        title='Market Design for AI Systems',
-                        content='Principles for designing efficient AI marketplaces...',
-                        description='Creating sustainable markets for AI resources'
-                    ),
-                    BlogPost(
-                        title='AI and Labor Market Transformation',
-                        content='Understanding how AI is reshaping employment...',
-                        description='Analysis of AI\'s impact on workforce dynamics'
-                    )
-                ]
-                db.session.add_all(sample_posts)
-                db.session.commit()
-                logger.info("Sample blog posts added successfully")
+            # Add sample books
+            sample_books = [
+                {
+                    'title': 'Thinking, Fast and Slow',
+                    'author': 'Daniel Kahneman',
+                    'notes': 'A fascinating exploration of the two systems that drive the way we think.'
+                },
+                {
+                    'title': 'The Age of AI',
+                    'author': 'Henry Kissinger, Eric Schmidt, and Daniel Huttenlocher',
+                    'notes': 'An insightful analysis of how AI will transform human society.'
+                },
+                {
+                    'title': 'Economics of Monetary Union',
+                    'author': 'Paul De Grauwe',
+                    'notes': 'A comprehensive examination of monetary unions and their economic implications.'
+                }
+            ]
 
-            # Add sample books if none exist
-            if not Book.query.first():
-                logger.info("Adding sample books...")
-                sample_books = [
-                    Book(
-                        title='The Economics of AI',
-                        author='Sample Author',
-                        notes='A fascinating exploration of AI economics'
-                    ),
-                    Book(
-                        title='Superintelligence: Paths, Dangers, Strategies',
-                        author='Nick Bostrom',
-                        notes='A comprehensive analysis of potential AI development trajectories and their implications'
-                    ),
-                    Book(
-                        title='The Economics of Artificial Intelligence',
-                        author='Ajay Agrawal, Joshua Gans, Avi Goldfarb',
-                        notes='Exploring the economic principles governing AI adoption and impact'
-                    ),
-                    Book(
-                        title='Human Compatible: AI and the Problem of Control',
-                        author='Stuart Russell',
-                        notes='Insights into designing AI systems that are aligned with human values'
-                    ),
-                    Book(
-                        title='Prediction Machines: The Simple Economics of Artificial Intelligence',
-                        author='Ajay Agrawal, Joshua Gans, Avi Goldfarb',
-                        notes='Understanding AI through the lens of economic decision-making'
-                    ),
-                    Book(
-                        title='The Alignment Problem',
-                        author='Brian Christian',
-                        notes='Examining the challenges of aligning AI systems with human values and objectives'
-                    ),
-                    Book(
-                        title='Life 3.0: Being Human in the Age of Artificial Intelligence',
-                        author='Max Tegmark',
-                        notes='Exploring the future of life in a world transformed by AI'
-                    )
-                ]
-                db.session.add_all(sample_books)
-                db.session.commit()
-                logger.info("Sample books added successfully")
+            for post_data in sample_posts:
+                post = BlogPost(**post_data)
+                db.session.add(post)
 
-        except Exception as e:
-            logger.error(f"Error initializing database: {str(e)}")
-            logger.error(traceback.format_exc())
-            raise
+            for book_data in sample_books:
+                book = Book(**book_data)
+                db.session.add(book)
+
+            db.session.commit()
+            logger.info("Sample data added successfully")
+
+    except Exception as e:
+        logger.error(f"Error initializing database: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise
 
 # Initialize database when the application starts
 with app.app_context():
-    init_db()
+    try:
+        init_db()
+        logger.info("Database initialization completed successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {str(e)}")
+        logger.error(traceback.format_exc())
 
 # Then define routes
 @app.route('/')
