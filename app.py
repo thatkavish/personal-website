@@ -23,8 +23,19 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 
 # Get the directory where app.py is located
 basedir = os.path.abspath(os.path.dirname(__file__))
-# Create data directory in the same folder as app.py
-data_dir = os.path.join(basedir, 'data')
+
+# Use DATABASE_URL from environment if available, otherwise use local path
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    data_dir = os.path.dirname(database_url.replace('sqlite:///', '/'))
+else:
+    # Create data directory in the same folder as app.py
+    data_dir = os.path.join(basedir, 'data')
+    # Use relative path for SQLite database
+    db_path = os.path.join(data_dir, "site.db")
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+
 try:
     os.makedirs(data_dir, exist_ok=True)
     logger.info(f"Data directory created at: {data_dir}")
@@ -33,12 +44,8 @@ except Exception as e:
     raise
 
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
-# Use relative path for SQLite database
-db_path = os.path.join(data_dir, "site.db")
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-logger.info(f"Using database at: {db_path}")
+logger.info(f"Using database at: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)

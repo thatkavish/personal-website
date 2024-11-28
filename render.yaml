@@ -8,11 +8,15 @@ services:
       echo "Current directory: $PWD"
       echo "Python version: $(python --version)"
       echo "Creating data directory..."
-      mkdir -p $PWD/data
+      mkdir -p /data
       echo "Setting permissions..."
-      chmod -R 777 $PWD/data
+      chmod -R 777 /data
       echo "Starting web server..."
       PYTHONUNBUFFERED=1 gunicorn --workers=4 --threads=4 --timeout=120 --log-level=debug app:app --bind 0.0.0.0:$PORT
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
@@ -24,5 +28,7 @@ services:
         value: "1"
       - key: SECRET_KEY
         generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:////data/site.db
       - key: PORT
         value: 10000
