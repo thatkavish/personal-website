@@ -13,7 +13,6 @@
                     <h3 class="book-title">{{ book.title }}</h3>
                     <p class="book-author">by {{ book.author }}</p>
                     <p class="book-notes">{{ book.notes }}</p>
-                    <p class="book-date">Added on {{ book.date_added.strftime('%B %d, %Y') }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -80,11 +79,6 @@
         color: var(--text-color);
         margin-bottom: 1rem;
         line-height: 1.6;
-    }
-
-    .book-date {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
     }
 
     @media (max-width: 768px) {
