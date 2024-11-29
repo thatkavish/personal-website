@@ -76,9 +76,9 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="container view-bookshelf-container">
-            <div class="view-bookshelf-wrapper">
-                <a href="{{ url_for('books') }}" class="view-bookshelf">View Full Bookshelf →</a>
+        <div class="container view-all-container">
+            <div class="view-all">
+                <a href="{{ url_for('books') }}" class="view-all-link">View Full Bookshelf →</a>
             </div>
         </div>
     </section>
@@ -328,6 +328,32 @@
 
     .btn-primary:hover {
         background-color: var(--text-color);
+        color: var(--bg-color);
+        transform: translateY(-2px);
+    }
+
+    .view-all-container {
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .view-all {
+        display: inline-block;
+    }
+
+    .view-all-link {
+        display: inline-block;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        border: 2px solid var(--primary-color);
+        border-radius: 4px;
+    }
+
+    .view-all-link:hover {
+        background-color: var(--primary-color);
         color: var(--bg-color);
         transform: translateY(-2px);
     }
