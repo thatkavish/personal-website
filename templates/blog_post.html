@@ -36,13 +36,8 @@
 
             <footer class="post-footer">
                 <div class="share-buttons">
-                    <a href="https://twitter.com/intent/tweet?text={{ post.title | urlencode }}&url={{ request.url | urlencode }}" 
-                       target="_blank" class="share-button twitter">
+                    <a href="https://twitter.com/intent/tweet?text={{ post.title }}&url={{ request.url }}" target="_blank" rel="noopener noreferrer" class="share-button twitter">
                         <i class="fab fa-twitter"></i> Share on Twitter
-                    </a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url | urlencode }}" 
-                       target="_blank" class="share-button linkedin">
-                        <i class="fab fa-linkedin"></i> Share on LinkedIn
                     </a>
                 </div>
             </footer>
