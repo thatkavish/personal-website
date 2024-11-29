@@ -34,9 +34,9 @@
         </div>
     </section>
 
-    <section id="blog" class="blog">
+    <section id="essays" class="blog">
         <div class="container">
-            <h2 class="section-title">Blog</h2>
+            <h2 class="section-title">Essays</h2>
             <div class="blog-grid">
                 {% for post in blog_posts[:3] %}
                 <article class="blog-preview">
@@ -52,7 +52,7 @@
         </div>
         <div class="container view-all-container">
             <div class="view-all">
-                <a href="{{ url_for('blog') }}" class="view-all-link">View All Posts →</a>
+                <a href="{{ url_for('blog') }}" class="view-all-link">View All Essays →</a>
             </div>
         </div>
     </section>
